@@ -86,12 +86,8 @@ export default function BiographyCard({ data, onCardClick, fetchData }) {
         if (isRequestInProgress) return;
         setIsRequestInProgress(true);
         try {
-            const response = await fetch(`https://professional-spotlight-backend.vercel.app/admin/biography/heart`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ title: data.title }), // Ensure 'data' is defined in the scope
+            const response = await getApi('POST', `/admin/biography/heart`, {
+                title: data.title
             });
     
             // Parse the JSON response
@@ -116,13 +112,9 @@ export default function BiographyCard({ data, onCardClick, fetchData }) {
         if (isRequestInProgress) return;
         setIsRequestInProgress(true);
         try {
-            // Make an API call to update the heart status of the biography
-            const response = await fetch(`https://professional-spotlight-backend.vercel.app/admin/biography/unlike`, {
-                method: "POST", // Use POST or PATCH depending on your backend setup
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ title: data.title }), 
+
+            const response = await getApi('POST', `/admin/biography/unlike`, {
+                title: data.title
             });
     
             // Parse the response
