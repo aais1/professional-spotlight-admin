@@ -83,22 +83,21 @@ export default function BiographyCard({ data, onCardClick, fetchData }) {
     };
 
     const handleHeartClick = async () => {
-        if (isRequestInProgress) return;
+        if (isRequestInProgress) return; // Prevent multiple requests
         setIsRequestInProgress(true);
+    
         try {
-            const response = await getApi('POST', `/admin/biography/heart`, {
-                title: data.title
+            const response = await getApi('POST', '/admin/biography/heart', {
+                title: data.title,
             });
     
-            // Parse the JSON response
-            const responseData = await response.json(); // Rename to avoid shadowing
+            console.log('Like response', response.data);
     
-            if (response.ok) {
-                fetchData();
-                alert("Successfully added to top biographies");
-            } else if (responseData.error) {
-                toast.error(responseData.error); // Check for errors from the server
-            }
+            // Check response status and data
+            if (response.data) {
+                fetchData(); // Refresh the data
+                toast.success("Successfully added to top biographies");
+            } 
         } catch (error) {
             console.error("Error updating biography of the day:", error);
             toast.error("An error occurred while updating the biography of the day");
@@ -107,30 +106,26 @@ export default function BiographyCard({ data, onCardClick, fetchData }) {
         }
     };
     
-
     const handleHeartDislike = async (biographyId) => {
-        if (isRequestInProgress) return;
+        if (isRequestInProgress) return; // Prevent multiple requests
         setIsRequestInProgress(true);
+    
         try {
-
-            const response = await getApi('POST', `/admin/biography/unlike`, {
-                title: data.title
+            const response = await getApi('POST', '/admin/biography/unlike', {
+                title: data.title,
             });
     
-            // Parse the response
-            const responseData = await response.json();
+            console.log('Unlike response', response.data);
     
-            if (response.ok) {
-                alert("Successfully removed from top biographies");
-                // Optionally, update the UI to reflect the change
-                fetchData(); // Refresh the data if needed
-            } else if (responseData.error) {
-                alert(`Error: ${responseData.error}`);
-            }
+            // Check response status and data
+            if (response.data) {
+                fetchData(); // Refresh the data
+                toast.success("Successfully removed from top biographies");
+            } 
         } catch (error) {
             console.error("Error unliking biography:", error);
-            alert("An error occurred while removing the heart from the biography.");
-        }finally {
+            toast.error("An error occurred while unliking the biography");
+        } finally {
             setIsRequestInProgress(false);
         }
     };

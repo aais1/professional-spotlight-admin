@@ -1,9 +1,9 @@
 import axios from "axios";
-
+import toast from "react-hot-toast";
 
 async function sendRequest(method, url, body = null) {
   console.log("body",body);
-  const baseURL = "https://professional-spotlight-backend.vercel.app"; // Make sure this is defined in .env file
+  const baseURL = "https://professional-spotlight-backend-beta.vercel.app"; // Make sure this is defined in .env file
   
   if (!baseURL) {
     throw new Error("Base URL is not defined in the environment variables.");
@@ -31,8 +31,8 @@ async function sendRequest(method, url, body = null) {
 
     // Handle different error scenarios
     if (error.response) {
-      // Server responded with a status other than 2xx
-      console.error("Error response data:", error.response.data);
+
+      toast.error(error.response.data.message );
       throw new Error(error.response.data.message || "Server error");
     } else if (error.request) {
       // No response received
