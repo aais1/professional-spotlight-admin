@@ -5,9 +5,9 @@ import InsertKeyPoint from "../../components/Portfolio/insertkeypoint";
 import EditKeypoints from "../../components/Portfolio/editkeypoints";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt, faEdit } from "@fortawesome/free-solid-svg-icons";
-import getApi from "../../Utils/apirequest.js"; // Ensure you import the getApi function
+import getApi from "../../Utils/apirequest.js";
 
-export default function Subdetailspage({ portfolioId, onBack, data}) {
+export default function Subdetailspage({ portfolioId, onBack, data }) {
     const [showModal, setShowModal] = useState(null);
     const [editkeyaspect, setEditKeyAspect] = useState(false);
     const [addkeyaspect, setAddKeyAspect] = useState(false);
@@ -16,10 +16,8 @@ export default function Subdetailspage({ portfolioId, onBack, data}) {
 
     const fetchData = async () => {
         try {
-         
             const response = await getApi("GET", `/admin/portfolio/${portfolioId}`);
             setProjects(response.data.project);
-           
             setKeypoints(response.data.keyaspect);
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -33,11 +31,6 @@ export default function Subdetailspage({ portfolioId, onBack, data}) {
     if (!data) {
         return <div>Loading...</div>;
     }
-
-    const handleEditClick = (e) => {
-        e.stopPropagation();
-        setEditKeyAspect(true);
-    };
 
     return (
         <div className="w-full">
@@ -56,6 +49,12 @@ export default function Subdetailspage({ portfolioId, onBack, data}) {
                         Add new Project
                     </button>
                     <button
+                        onClick={() => setEditKeyAspect(true)}
+                        className="bg-boxdark hover:bg-graydark hover:shadow-1 text-white font-bold py-2 px-2 sm:px-4 rounded-md"
+                    >
+                        Update key aspects
+                    </button>
+                    <button
                         onClick={() => setAddKeyAspect(true)}
                         className="bg-boxdark hover:bg-graydark hover:shadow-1 text-white font-bold py-2 px-2 sm:px-4 rounded-md"
                     >
@@ -70,17 +69,13 @@ export default function Subdetailspage({ portfolioId, onBack, data}) {
                         <Project key={project.id} project={project} fetchData={fetchData} />
                     ))}
                 </div>
-                {/* Key aspects key points */}
-                {console.log("key points",keypoints)}
                 <h1 className="text-xl m-2 font-semibold">Key Aspects</h1>
                 <div className="grid m-2 border border-black-2 p-2 rounded-md justify-start gap-3">
-                {keypoints?.map((keypoint) => (
+                    {keypoints?.map((keypoint) => (
                         <div key={keypoint._id}>
-                            {/* <h2 className="text-lg font-semibold">Key Aspect {keypoint._id}</h2> */}
                             {keypoint.keyaspect.map((aspect, index) => (
-                                    <li key={index} className="text-sm sm:text-lg">{aspect}</li>
-                                ))}
-                        
+                                <li key={index} className="text-sm sm:text-lg">{aspect}</li>
+                            ))}
                         </div>
                     ))}
                 </div>

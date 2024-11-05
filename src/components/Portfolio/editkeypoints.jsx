@@ -5,11 +5,11 @@ import { ToastContainer, toast } from "react-toastify";
 import getApi from "../../Utils/apirequest.js";
 
 export default function InsertKeyPoint({ keypoints, setEditKeyAspect, fetchData, portfolioId }) {
-    const [keyPoints, setKeyPoints] = useState(keypoints);
-    const [originalKeyPoints, setOriginalKeyPoints] = useState([]);
+    const [keyPoints, setKeyPoints] = useState([]);
 
     useEffect(() => {
-        setOriginalKeyPoints(keypoints.map(kp => ({ ...kp })));
+        // Initialize key points from props
+        setKeyPoints(keypoints.map(kp => ({ ...kp })));
     }, [keypoints]);
 
     // Handle input change for key points
@@ -21,36 +21,49 @@ export default function InsertKeyPoint({ keypoints, setEditKeyAspect, fetchData,
 
     // Handle key point deletion
     const handleDeleteKeyPoint = async (id) => {
-        console.log("Deleting key point with id:", id);
-        const response = await getApi("DELETE", `/admin/portfolio/keyaspect/${id}`, {});
-        if (response.status === 200) {
-            fetchData();
-            toast.success("Key Point deleted successfully");
-            setEditKeyAspect(false);
-        } else {
-            toast.error("Failed to delete Key Point");
+        try {
+            const response = await getApi("DELETE", `/admin/portfolio/keyaspect/${id}`);
+            if (response.status === 200) {
+                toast.success("Key Point deleted successfully");
+                fetchData(); // Refresh data after deletion
+            } else {
+                toast.error("Failed to delete Key Point");
+            }
+        } catch (error) {
+            toast.error("Error deleting Key Point");
+            console.error("Delete error:", error);
         }
     };
 
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const changedKeyPoints = keyPoints.filter((kp, index) => kp.keyaspect !== originalKeyPoints[index].keyaspect);
+        const changedKeyPoints = keyPoints.filter(
+            (kp, index) => kp.keyaspect !== keypoints[index].keyaspect
+        );
+
         if (changedKeyPoints.length > 0) {
             const payload = {
-                keyaspectId: portfolioId,
-                keyaspects: changedKeyPoints.map(kp => ({ id: kp._id, keyaspect: kp.keyaspect }))
+                portfolioId, // Pass portfolioId as a separate field
+                keyaspects: changedKeyPoints.map(kp => ({
+                    id: kp._id,
+                    keyaspect: kp.keyaspect
+                }))
             };
-            const response = await getApi("PUT", `/admin/portfolio/keyaspect`, payload);
-            if (response.status === 200) {
-                toast.success("Key Points updated successfully");
-                console.log("Key Points updated successfully");
-                fetchData();
-                setEditKeyAspect(false);
-            } else {
-                toast.error("Failed to update Key Points");
+
+            try {
+                const response = await getApi("PUT", `/admin/portfolio/keyaspect`, payload);
+                if (response.status === 200) {
+                    toast.success("Key Points updated successfully");
+                    fetchData(); // Refresh data after update
+                    setEditKeyAspect(false); // Close modal
+                } else {
+                    toast.error("Failed to update Key Points");
+                }
+            } catch (error) {
+                toast.error("Error updating Key Points");
+                console.error("Update error:", error);
             }
-            console.log("Submitted Key Points:", changedKeyPoints);
         } else {
             toast.info("No changes detected");
         }
@@ -64,19 +77,8 @@ export default function InsertKeyPoint({ keypoints, setEditKeyAspect, fetchData,
     return (
         <>
             <form onSubmit={handleSubmit} className="bg-white p-10">
-                <div className="mt-5">
-                    <ToastContainer
-                        position="top-right"
-                        autoClose={5000}
-                        hideProgressBar={false}
-                        newestOnTop={false}
-                        closeOnClick
-                        rtl={false}
-                        pauseOnFocusLoss
-                        draggable
-                        pauseOnHover
-                    />
-                </div>
+                <ToastContainer position="top-right" autoClose={5000} />
+
                 <div className="flex justify-between items-center">
                     <h1 className="text-lg font-medium mb-4">Edit Key Points</h1>
                     <FontAwesomeIcon
@@ -87,15 +89,14 @@ export default function InsertKeyPoint({ keypoints, setEditKeyAspect, fetchData,
                 </div>
 
                 {/* Render multiple input fields for key points */}
-                {keyPoints?.map((keyPoint, index) => (
-                    <div key={index} className="mb-4 flex items-center space-x-4">
+                {keyPoints.map((keyPoint, index) => (
+                    <div key={keyPoint._id} className="mb-4 flex items-center space-x-4">
                         <input
                             type="text"
-                            name={`keypoint-${index}`}
                             value={keyPoint.keyaspect}
                             onChange={(e) => handleKeyPointChange(index, e)}
                             placeholder={`Enter keypoint ${index + 1}`}
-                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
                         />
                         <button
                             type="button"
