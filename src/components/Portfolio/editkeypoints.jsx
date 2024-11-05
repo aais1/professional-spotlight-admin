@@ -22,10 +22,13 @@ export default function InsertKeyPoint({ keypoints, setEditKeyAspect, fetchData,
 
     // Handle key point deletion
     const handleDeleteKeyPoint = async (id) => {
-        console.log(id)
+        console.log(id);
         try {
-            const response = await getApi("DELETE", `/admin/portfolio/keyaspect/${id}`);
-            if (response.status === 200) {
+            const response = await fetch(`http://localhost:3001/admin/portfolio/keyaspect/${id}`, {
+                method: "DELETE",
+            });
+            
+            if (response.ok) {
                 toast.success("Key Point deleted successfully");
                 fetchData(); // Refresh data after deletion
             } else {
