@@ -97,7 +97,7 @@ export default function Subdetailspage({ portfolioId, onBack, data }) {
             {editkeyaspect && (
                 <div className="fixed inset-0 h-screen sm:ml-10 flex items-center justify-center z-50">
                     <div className="p-1 sm:p-4 w-full sm:w-2/5 h-125 sm:h-150 mt-10 rounded overflow-auto" style={{ scrollbarColor: 'transparent transparent' }}>
-                        <EditKeypoints keypoints={keypoints} setEditKeyAspect={setEditKeyAspect} fetchData={fetchData} />
+                        <EditKeypoints portfolioId={portfolioId} keypoints={keypoints} setEditKeyAspect={setEditKeyAspect} fetchData={fetchData} />
                     </div>
                 </div>
             )}

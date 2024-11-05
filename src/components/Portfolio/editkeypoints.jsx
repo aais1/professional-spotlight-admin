@@ -6,6 +6,7 @@ import getApi from "../../Utils/apirequest.js";
 
 export default function InsertKeyPoint({ keypoints, setEditKeyAspect, fetchData, portfolioId }) {
     const [keyPoints, setKeyPoints] = useState([]);
+    console.log(portfolioId,keyPoints)
 
     useEffect(() => {
         // Initialize key points from props
@@ -21,6 +22,7 @@ export default function InsertKeyPoint({ keypoints, setEditKeyAspect, fetchData,
 
     // Handle key point deletion
     const handleDeleteKeyPoint = async (id) => {
+        console.log(id)
         try {
             const response = await getApi("DELETE", `/admin/portfolio/keyaspect/${id}`);
             if (response.status === 200) {
@@ -51,9 +53,18 @@ export default function InsertKeyPoint({ keypoints, setEditKeyAspect, fetchData,
                 }))
             };
 
+            console.log(payload)
+
             try {
-                const response = await getApi("PUT", `/admin/portfolio/keyaspect`, payload);
-                if (response.status === 200) {
+                const response = await fetch("http://localhost:3001/admin/portfolio/keyaspect", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
                     toast.success("Key Points updated successfully");
                     fetchData(); // Refresh data after update
                     setEditKeyAspect(false); // Close modal
@@ -61,6 +72,8 @@ export default function InsertKeyPoint({ keypoints, setEditKeyAspect, fetchData,
                     toast.error("Failed to update Key Points");
                 }
             } catch (error) {
+
+                console.log(error)
                 toast.error("Error updating Key Points");
                 console.error("Update error:", error);
             }
