@@ -72,7 +72,7 @@ export default function UpdateProject({ data, setShowModal, fetchData }) {
                     </h3>
                     <FontAwesomeIcon className="text-lg cursor-pointer" onClick={handleOnClose} icon={faTimes} />
                 </div>
-                <div className="w-full xl:w-1/2x">
+                {/* <div className="w-full xl:w-1/2x">
                     <label className="mb-2.5 block text-black dark:text-white">
                         Title
                     </label>
@@ -84,8 +84,8 @@ export default function UpdateProject({ data, setShowModal, fetchData }) {
                         placeholder="Enter your title"
                         className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
-                </div>
-                <div className="w-full xl:w-1/2">
+                </div> */}
+                {/* <div className="w-full xl:w-1/2">
                     <label className="mb-2.5 block text-black dark:text-white">
                         Link
                     </label>
@@ -97,11 +97,11 @@ export default function UpdateProject({ data, setShowModal, fetchData }) {
                         placeholder="Enter your Link"
                         className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
-                </div>
+                </div> */}
                 <div className="mb-6">
-                    <label className="mb-2.5 block text-black dark:text-white">
+                    {/* <label className="mb-2.5 block text-black dark:text-white">
                         Description
-                    </label>
+                    </label> */}
                     <ReactQuill
                         value={description}
                         onChange={setDescription}
